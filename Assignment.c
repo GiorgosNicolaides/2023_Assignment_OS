@@ -38,6 +38,7 @@ main()
     }
     else if (pid != 0) // parents code
     {
+        
         { // open the file
             int fd, bytes;
             char buffer[SIZE];
@@ -55,14 +56,21 @@ main()
             }
             bytes = write(fd, buffer, 2000);
             printf("Bytes were written SIZE:%d\n", bytes);
+            
         }
+        wait(0);
+        
     }
     else if (pid == 0) // child code
     {
-        pthread_mutex_lock(&mymutex);
+        
+        sleep(2);
+
         printf("I'm child %d\n", getpid());
         exit(0);
-        pthread_mutex_unlock(&mymutex);
+       
+
+        
     }
 }
 
