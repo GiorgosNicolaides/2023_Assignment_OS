@@ -30,7 +30,7 @@ main()
                 signal(signal_ign, SIG_IGN); // ignore all other signals
         }
     }
-    int pid;
+    int pid,status;
     if ((pid = fork()) == -1) // check for errord uring fork
     {
         perror("fork");
@@ -54,24 +54,27 @@ main()
                 buf[i] = (rand() % (122 - 97 + 1)) + 97;
                 buffer[i] = buf[i];
             }
+            pthread_mutex_lock(&mymutex);
             bytes = write(fd, buffer, 2000);
             printf("Bytes were written SIZE:%d\n", bytes);
-            
+            pthread_mutex_unlock(&mymutex);
+            close(fd);
         }
-        wait(0);
+        
+        waitpid(pid,&status,WNOHANG);
         
     }
     else if (pid == 0) // child code
     {
         
-        sleep(2);
-
+        sleep(1);
         printf("I'm child %d\n", getpid());
-        exit(0);
+        exit(8);
        
 
         
     }
+    sleep(1);
 }
 
 void signal_handler(int signum) // void to handle signals
