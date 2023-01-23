@@ -16,6 +16,7 @@ void *thread_func(void *args);
 void child();
 void parent();
 int sum = 0;
+int array[26];
 pthread_mutex_t mymutex = PTHREAD_MUTEX_INITIALIZER;
 
 main()
@@ -76,8 +77,9 @@ void child()
         {
             pthread_join(threads[i], NULL);
         }
-
+        int b;
         printf("The file contains %d character from a-z\n", sum);
+        
         close(fd);
     }
 }
@@ -107,7 +109,22 @@ void *thread_func(void *args)
     {
         if (buff[i] >= 97 && buff[i] <= 122)
         {
+            pthread_mutex_lock(&mymutex);
             sum += 1;
+            pthread_mutex_unlock(&mymutex);
+        }
+    }
+    int b;
+    char c;
+    for(int i=0;i<500;i++)
+    {
+        if(buff[i]>=97 && buff[i]<=122)
+        {
+            pthread_mutex_lock(&mymutex);
+            c = buff[i];
+            b = (int) c ;
+            array[b]++;
+            pthread_mutex_unlock(&mymutex);
         }
     }
 }
