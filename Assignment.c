@@ -15,13 +15,17 @@ void signal_handler(int signum);
 void *thread_func(void *args);
 void child();
 void parent();
-
+int sum = 0;
 pthread_mutex_t mymutex = PTHREAD_MUTEX_INITIALIZER;
 
 main()
 {
-
-    // declare srand
+    int fd;
+    //create a file 
+    if((fd=open("data.txt" , O_CREAT, 0666)) == -1)
+    {
+        perror("open");
+    }
 
     printf("PID:%d\n", getpid());
     { // signal handling
@@ -53,35 +57,37 @@ main()
         sleep(4);
         child();
     }
+    sleep(4);
 }
 
 void child()
 {
     {
-    int fd;
-    // open fd
-    if ((fd = open("data.txt", O_RDONLY)) == -1)
-    {
-        perror("open");
-        exit(EXIT_FAILURE);
-    }
-    printf("Pid of process PID:%d\n", getpid());
-    pthread_t threads[N_THREADS];
+        int fd;
+        // open fd
+        if ((fd = open("data.txt", O_RDONLY)) == -1)
+        {
+            perror("open");
+            exit(EXIT_FAILURE);
+        }
+        printf("Pid of process PID:%d\n", getpid());
+        pthread_t threads[N_THREADS];
 
-    int count[N_THREADS];
+        int count[N_THREADS];
 
-    for (int i = 0; i < N_THREADS; i++)
-    {
-        count[i] = i;
-        pthread_create(&threads[i], NULL, thread_func, &fd);
-    }
-    for(int i=0;i<N_THREADS;i++)
-    {
-        pthread_join(threads[i], NULL);
-    }
+        for (int i = 0; i < N_THREADS; i++)
+        {
+            count[i] = i;
+            pthread_create(&threads[i], NULL, thread_func, &fd);
+        }
+        for (int i = 0; i < N_THREADS; i++)
+        {
+            pthread_join(threads[i], NULL);
+        }
 
-    printf("The file contains %d character from a-z\n" , sum);
-}
+        printf("The file contains %d character from a-z\n", sum);
+        close(fd);
+    }
 }
 
 void signal_handler(int signum) // void to handle signals
@@ -102,10 +108,9 @@ void *thread_func(void *args)
     read(*fd, buff, 500);
     for (int i = 0; i < 500; i++)
     {
-        if(buff[i]>=97 && buff[i]<=122)
+        if (buff[i] >= 97 && buff[i] <= 122)
         {
             sum += 1;
-            
         }
     }
 }
@@ -117,8 +122,8 @@ void parent()
         int fd, bytes;
         int buf[SIZE];
         char buffer[SIZE];
-        pthread_
-        if ((fd = open("data.txt", O_WRONLY | O_CREAT)) == -1) // check for errors during open
+
+        if ((fd = open("data.txt", O_WRONLY )) == -1) // check for errors during open
         {
             perror("open");
             exit(EXIT_FAILURE);
