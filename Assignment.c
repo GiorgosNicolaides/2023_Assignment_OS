@@ -30,7 +30,7 @@ main()
                 signal(signal_ign, SIG_IGN); // ignore all other signals
         }
     }
-    int pid,status;
+    int pid, status;
     if ((pid = fork()) == -1) // check for errord uring fork
     {
         perror("fork");
@@ -38,7 +38,7 @@ main()
     }
     else if (pid != 0) // parents code
     {
-        
+
         { // open the file
             int fd, bytes;
             char buffer[SIZE];
@@ -60,19 +60,14 @@ main()
             pthread_mutex_unlock(&mymutex);
             close(fd);
         }
-        
-        waitpid(pid,&status,WNOHANG);
-        
+
+        waitpid(pid, &status, WNOHANG);
     }
     else if (pid == 0) // child code
     {
-        
         sleep(1);
         printf("I'm child %d\n", getpid());
         exit(8);
-       
-
-        
     }
     sleep(1);
 }
