@@ -21,24 +21,16 @@ pthread_mutex_t mymutex = PTHREAD_MUTEX_INITIALIZER;
 main()
 {
     int fd;
-    //create a file 
-    if((fd=open("data.txt" , O_CREAT, 0666)) == -1)
+    // create a file
+    if ((fd = open("data.txt", O_CREAT, 0666)) == -1)
     {
         perror("open");
     }
 
     printf("PID:%d\n", getpid());
     { // signal handling
-        int signal_ign;
-        for (signal_ign = 0; signal_ign < 31; signal_ign++)
-        {
-            if (signal_ign == 2)
-                signal(SIGINT, signal_handler); // handle kill-2
-            else if (signal_ign == 9)
-                signal(SIGTERM, signal_handler); // handle kill-15
-            else
-                signal(signal_ign, SIG_IGN); // ignore all other signals
-        }
+        signal(SIGTERM, signal_handler); // handle kill-15
+        signal(SIGINT, signal_handler); // handle kill-2
     }
     int pid, status;
     if ((pid = fork()) == -1) // check for errord uring fork
@@ -92,13 +84,18 @@ void child()
 
 void signal_handler(int signum) // void to handle signals
 {
+    sigset_t mask;
+
     char response;
-    printf("\nAre you sure you want to exit?\n");
+    printf("Are you sure you want to exit?\n");
     scanf("%c", &response);
-    if (response == 'Y' | 'y')
+    if (response != 'Y' | 'y')
     {
         exit(signum);
     }
+    else
+        sigfillset(&mask);
+    sigprocmask(SIG_SETMASK, &mask, NULL);
 }
 
 void *thread_func(void *args)
@@ -123,7 +120,7 @@ void parent()
         int buf[SIZE];
         char buffer[SIZE];
 
-        if ((fd = open("data.txt", O_WRONLY )) == -1) // check for errors during open
+        if ((fd = open("data.txt", O_WRONLY)) == -1) // check for errors during open
         {
             perror("open");
             exit(EXIT_FAILURE);
