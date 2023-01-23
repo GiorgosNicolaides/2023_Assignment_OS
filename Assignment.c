@@ -7,7 +7,7 @@ void signal_handler(int signum);
 
 main()
 {
-    printf("PID:%d", getpid());
+    printf("PID:%d\n", getpid());
     {//signal handling
         int signal_ign;
         for (signal_ign = 0; signal_ign < 31; signal_ign++)
@@ -19,6 +19,23 @@ main()
             else
                 signal(signal_ign, SIG_IGN); // ignore all other signals
         }
+    }
+    int pid;
+    if((pid=fork()) == -1)//check for errorduring fork
+    {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+    else if(pid != 0)//parents code
+    {
+        printf("I'm parent %d\n",getpid());
+        wait(0);
+        printf("My child is %d\n" , pid);
+    }
+    else if(pid == 0)//child code 
+    {
+        printf("I'm child %d\n",getpid());
+        exit(0);
     }
 }
 
