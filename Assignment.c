@@ -54,10 +54,8 @@ main()
                 buf[i] = (rand() % (122 - 97 + 1)) + 97;
                 buffer[i] = buf[i];
             }
-            pthread_mutex_lock(&mymutex);
             bytes = write(fd, buffer, 2000);
             printf("Bytes were written SIZE:%d\n", bytes);
-            pthread_mutex_unlock(&mymutex);
             close(fd);
         }
 
