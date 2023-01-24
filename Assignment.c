@@ -50,7 +50,7 @@ main()
         sleep(4);
         child();
     }
-    sleep(4);
+    sleep(5);
 }
 
 void child()
@@ -77,7 +77,15 @@ void child()
         {
             pthread_join(threads[i], NULL);
         }
-        int b;
+        for(int i=0;i<26;i++)
+        {
+            printf("%c appears %d times\n" , (97+i) , array[i]);
+        }
+        for (int i = 0; i < 26; i++)
+        {
+            sum += array[i];
+        }
+        
         printf("The file contains %d character from a-z\n", sum);
         
         close(fd);
@@ -105,15 +113,7 @@ void *thread_func(void *args)
     int *fd = args;
     char buff[500];
     read(*fd, buff, 500);
-    for (int i = 0; i < 500; i++)
-    {
-        if (buff[i] >= 97 && buff[i] <= 122)
-        {
-            pthread_mutex_lock(&mymutex);
-            sum += 1;
-            pthread_mutex_unlock(&mymutex);
-        }
-    }
+    
     int b;
     char c;
     for(int i=0;i<500;i++)
@@ -122,7 +122,7 @@ void *thread_func(void *args)
         {
             pthread_mutex_lock(&mymutex);
             c = buff[i];
-            b = (int) c ;
+            b = (int) c % 97 ;
             array[b]++;
             pthread_mutex_unlock(&mymutex);
         }
@@ -148,7 +148,7 @@ void parent()
             buf[i] = (rand() % (122 - 97 + 1)) + 97;
             buffer[i] = buf[i];
         }
-        bytes = write(fd, buffer, 2000);
+        bytes = write(fd, buffer, sizeof(buffer));
         printf("Bytes were written SIZE:%d\n", bytes);
         close(fd);
     }
