@@ -23,7 +23,7 @@ main()
 {
     int fd;
     // create a file
-    if ((fd = open("data.txt", O_CREAT, 0666)) == -1)
+    if ((fd = open("bin/data.txt", O_CREAT, 0666)) == -1)
     {
         perror("open");
     }
@@ -60,7 +60,7 @@ void child()
     {
         int fd;
         // open fd
-        if ((fd = open("data.txt", O_RDONLY)) == -1)
+        if ((fd = open("bin/data.txt", O_RDONLY)) == -1)
         {
             perror("open");
             exit(EXIT_FAILURE);
@@ -138,7 +138,7 @@ void parent()
         int buf[SIZE];
         char buffer[SIZE];
 
-        if ((fd = open("data.txt", O_WRONLY)) == -1) // check for errors during open
+        if ((fd = open("bin/data.txt", O_WRONLY)) == -1) // check for errors during open
         {
             perror("open");
             exit(EXIT_FAILURE);
