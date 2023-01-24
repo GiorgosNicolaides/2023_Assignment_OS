@@ -29,9 +29,9 @@ main()
     }
 
     printf("PID:%d\n", getpid());
-    { // signal handling
+    {                                    // signal handling
         signal(SIGTERM, signal_handler); // handle kill-15
-        signal(SIGINT, signal_handler); // handle kill-2
+        signal(SIGINT, signal_handler);  // handle kill-2
     }
     int pid, status;
     if ((pid = fork()) == -1) // check for errord uring fork
@@ -48,6 +48,8 @@ main()
     else if (pid == 0) // child code
     {
         sleep(4);
+        printf("Child running....\nPID:%d\n", getpid());
+
         child();
     }
     sleep(5);
@@ -63,7 +65,6 @@ void child()
             perror("open");
             exit(EXIT_FAILURE);
         }
-        printf("Pid of process PID:%d\n", getpid());
         pthread_t threads[N_THREADS];
 
         int count[N_THREADS];
@@ -77,17 +78,17 @@ void child()
         {
             pthread_join(threads[i], NULL);
         }
-        for(int i=0;i<26;i++)
+        for (int i = 0; i < 26; i++)
         {
-            printf("%c appears %d times\n" , (97+i) , array[i]);
+            printf("%c appears %d times\n", (97 + i), array[i]);
         }
         for (int i = 0; i < 26; i++)
         {
             sum += array[i];
         }
-        
+
         printf("The file contains %d character from a-z\n", sum);
-        
+
         close(fd);
     }
 }
@@ -113,16 +114,16 @@ void *thread_func(void *args)
     int *fd = args;
     char buff[500];
     read(*fd, buff, 500);
-    
+
     int b;
     char c;
-    for(int i=0;i<500;i++)
+    for (int i = 0; i < 500; i++)
     {
-        if(buff[i]>=97 && buff[i]<=122)
+        if (buff[i] >= 97 && buff[i] <= 122)
         {
             pthread_mutex_lock(&mymutex);
             c = buff[i];
-            b = (int) c % 97 ;
+            b = (int)c % 97;
             array[b]++;
             pthread_mutex_unlock(&mymutex);
         }
