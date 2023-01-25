@@ -13,3 +13,9 @@ or
 
 ./bin/assignment.o
 ```
+
+## To clean 
+```
+make clean 
+
+
