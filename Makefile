@@ -13,7 +13,7 @@ all: $(EXECUTABLE)
 
 # $^ is $(OBJECTS)
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $^ -o $(BIN)/$(EXECUTABLE)
+	$(CC) $^ -pthread -o $(BIN)/$(EXECUTABLE)
 
 # students: src/main.o src/student.o
 # 	gcc -Wall -Werror -Iinclude src/main.o src/student.o -o bin/students
